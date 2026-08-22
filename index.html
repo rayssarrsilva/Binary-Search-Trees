@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Binary Search Tree</title>
+<style>
+  :root {
+    --bg: #060b09;
+    --panel-bg: #060b09;
+    --border: #c9d2c9;
+    --text: #e6ece6;
+    --muted: #8fa08f;
+    --input-bg: #0c1310;
+    --button-bg: #d6d9d6;
+    --button-text: #0a0a0a;
+    --button-border: #8a908a;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Courier New", Consolas, Menlo, monospace;
+    font-size: 14px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 1080px;
+    border: 1px solid var(--border);
+  }
+
+  .app-title {
+    margin: 0;
+    padding: 10px 14px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .app-body {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .app-body > .input-panel {
+    flex: 0 0 34%;
+    border-right: 1px solid var(--border);
+  }
+
+  .app-body > .right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  fieldset {
+    border: 1px solid var(--border);
+    margin: 0;
+    padding: 14px;
+  }
+
+  .input-panel fieldset {
+    border: none;
+    padding: 14px;
+    height: 100%;
+  }
+
+  legend {
+    padding: 0 6px;
+    color: var(--text);
+  }
+
+  .output-panel {
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+    overflow: auto;
+    min-height: 260px;
+  }
+
+  .info-panel {
+    flex: 0 0 auto;
+  }
+
+  label {
+    display: block;
+    margin: 16px 0 6px;
+    color: var(--text);
+  }
+
+  label:first-of-type {
+    margin-top: 0;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 6px 8px;
+  }
+
+  input[type="text"]:focus {
+    outline: 1px solid var(--muted);
+    outline-offset: 1px;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .field-row input[type="text"] {
+    flex: 1;
+  }
+
+  button {
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-border);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    filter: brightness(0.92);
+  }
+
+  button:active {
+    filter: brightness(0.82);
+  }
+
+  .rebalance-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 8px 14px;
+  }
+
+  .find-result {
+    margin-top: 6px;
+    min-height: 1em;
+    color: var(--muted);
+  }
+
+  pre#tree-output {
+    margin: 0;
+    padding: 14px;
+    white-space: pre;
+    line-height: 1.35;
+  }
+
+  .info-panel dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    row-gap: 6px;
+    column-gap: 12px;
+  }
+
+  .info-panel dt {
+    color: var(--text);
+  }
+
+  .info-panel dd {
+    margin: 0;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  @media (max-width: 720px) {
+    .app-body {
+      flex-direction: column;
+    }
+
+    .app-body > .input-panel {
+      flex: none;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1 class="app-title">Binary Search Tree</h1>
+  <div class="app-body">
+    <div class="input-panel">
+      <fieldset>
+        <legend>Input</legend>
+
+        <label for="build-input">Enter numbers followed by spaces</label>
+        <input type="text" id="build-input" value="2 3 4 5 6 7 2 1 22 44 55 66 77 88 999 555 44444" />
+
+        <label for="insert-input">Insert numbers (duplicates are ignored)</label>
+        <div class="field-row">
+          <input type="text" id="insert-input" />
+          <button id="insert-button" type="button">Insert</button>
+        </div>
+
+        <label for="delete-input">Remove number</label>
+        <div class="field-row">
+          <input type="text" id="delete-input" />
+          <button id="delete-button" type="button">Delete</button>
+        </div>
+
+        <label for="find-input">Find and view depth of number</label>
+        <div class="field-row">
+          <input type="text" id="find-input" />
+          <button id="find-button" type="button">Find</button>
+        </div>
+        <div class="find-result" id="find-result"></div>
+
+        <label for="rebalance-button">Rebalance tree</label>
+        <button id="rebalance-button" type="button" class="rebalance-button">Rebalance</button>
+      </fieldset>
+    </div>
+
+    <div class="right-column">
+      <fieldset class="output-panel">
+        <legend>Output</legend>
+        <pre id="tree-output"></pre>
+      </fieldset>
+
+      <fieldset class="info-panel">
+        <legend>Information</legend>
+        <dl>
+          <dt>Height:</dt>
+          <dd id="info-height"></dd>
+
+          <dt>Balanced:</dt>
+          <dd id="info-balanced"></dd>
+
+          <dt>Level Order:</dt>
+          <dd id="info-level-order"></dd>
+
+          <dt>Pre Order:</dt>
+          <dd id="info-pre-order"></dd>
+
+          <dt>In Order:</dt>
+          <dd id="info-in-order"></dd>
+
+          <dt>Post Order:</dt>
+          <dd id="info-post-order"></dd>
+        </dl>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="src/ui/main.js"></script>
+</body>
+</html>
