@@ -2,6 +2,9 @@
 
 A balanced binary search tree implementation in vanilla JavaScript, built with an emphasis on SOLID principles and clean, self-documenting code.
 
+## Demo
+<img width="956" height="514" alt="binary" src="https://github.com/user-attachments/assets/a91ffad2-9ba0-4aa6-899c-ed6ec20a2fc1" />
+
 ## Features
 
 - Build a balanced BST from an array of numbers (sorted and deduplicated automatically)
