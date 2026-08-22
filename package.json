@@ -1,0 +1,10 @@
+{
+  "name": "binary-search-tree",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Balanced binary search tree with a terminal-style web UI",
+  "main": "src/driver.js",
+  "scripts": {
+    "start": "node src/driver.js"
+  }
+}
